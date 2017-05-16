@@ -20,22 +20,30 @@
   "Keymap for LEF-DEF major mode.")
 
 ;;; ### autoload
-(add-to-list 'auto-mode-alist '("\\.[ld]ef$" . lef-def-mode))
+(add-to-list 'auto-mode-alist '("\\.[lLDd][eE][fF]$" . lef-def-mode))
 
 (defconst lef-def-font-lock-keyword-face-1
   (list
-   '("\\<\\(#.*$\\)\\>" . font-lock-comment-face))
+   '("\\<\\[:alnum:];\\$\\>\\|\\[:alnum:][ ]\\*\\$\\|\\[:alnum:] \\[ ]\\+;\\$\\|\\[^ \\];\\$" . font-lock-warning-face)
+   '("\\<\\(CLASS\\|MACRO\\)\\>" . font-lock-builtin-face)
+   )
   "Highliting for LEF-DEF-MODE.")
 
+(defconst lef-def-font-lock-keyword-face-2
+  (append lef-def-font-lock-keyword-face-1
+	  (list
+	   '("\\<\\(#\\.\\$\\)\\>" . font-lock-comment-face)
+	   ))
+  "Highlight comments for LEF-DEF-MODE.")
 
-(defvar lef-def-mode-font-lock-keywords lef-def-font-lock-keyword-face-1
+(defvar lef-def-mode-font-lock-keywords lef-def-font-lock-keyword-face-2
   "Keywords for LEF DEF font lock.")
 
 ;; make the LEF DEF MODE from here
 ;; add the keymap & syntax hilight after doc string
 (define-derived-mode lef-def-mode fundamental-mode "LEF DEF Mode"
   "This is a Fundamental mode for editing LEF DEF files."
-  (set (make-local-variable 'font-lock-defaults) '(lef-def-font-lock-keywords))
+  (set (make-local-variable 'font-lock-defaults) '(lef-def-mode-font-lock-keywords))
   )
 
 (provide 'lef-def-mode)
